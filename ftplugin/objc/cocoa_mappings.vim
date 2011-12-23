@@ -3,9 +3,22 @@
 " Description: Sets up mappings for cocoa.vim.
 " Last Updated: December 26, 2009
 
+"au FileType objc let b:match_words = '@\(implementation\|interface\):@end'
+"      \ | setl inc=^\s*#\s*import omnifunc=objc#cocoacomplete#Complete
+"      \ | if globpath(expand('<afile>:p:h'), '*.xcodeproj') != ''
+"      \ | setl makeprg=open\ -a\ xcode\ &&\ osascript\ -e\ 'tell\ app\ \"Xcode\"\ to\ build'
+"      \ | endif
+
 if exists('b:cocoa_proj') || &cp || version < 700
 	finish
 endif
+
+
+"this is all taht's in the standard plugin, so just produce it here and
+"prevent the original from running
+runtime! ftplugin/c.vim ftplugin/c_*.vim ftplugin/c/*.vim
+let b:did_ftplugin = 1
+
 let b:cocoa_proj = fnameescape(globpath(expand('<afile>:p:h'), '*.xcodeproj'))
 " Search a few levels up to see if we can find the project file
 if empty(b:cocoa_proj)
@@ -42,8 +55,13 @@ nn <buffer> <silent> <d-2> :<c-u>ListMethods<cr>
 nm <buffer> <silent> <d-cr> <d-r>
 ino <buffer> <silent> <f5> <c-x><c-o>
 nn <buffer> <d-/> I// <ESC>
-nn <buffer> <d-[> <<
-nn <buffer> <d-]> >>
+
+setlocal inc=^\s*#\s*import 
+setlocal omnifunc=objc#cocoacomplete#Complete
+if globpath(expand('<afile>:p:h'), '*.xcodeproj') != ''
+  setl makeprg=open\ -a\ xcode\ &&\ osascript\ -e\ 'tell\ app\ \"Xcode\"\ to\ build'
+endif
+
 
 if exists('*s:AlternateFile') | finish | endif
 
@@ -83,3 +101,4 @@ fun s:BuildAnd(command)
 				\ .a:command.' target_'
 				\ ."' -e 'end tell'")
 endf
+

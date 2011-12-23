@@ -7,8 +7,6 @@
 "          things down. Loading it seems to take less than 0.5 microseconds
 "          on my machine, but I'm not sure of the consequences; if it is slow
 "          for you, just comment out the next line.
-ru after/syntax/cocoa_keywords.vim
-
 syn match objcDirective '@synthesize\|@property\|@optional\|@required' display
 syn keyword objcType IBOutlet IBAction Method
 syn keyword objcConstant YES NO TRUE FALSE
